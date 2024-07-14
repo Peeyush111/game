@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Scavenger Hunt - Love Letter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fef6e4;
+            color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .task {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .love-symbol {
+            font-size: 100px;
+            color: red;
+            margin-top: 20px;
+        }
+
+        .broken-heart {
+            font-size: 100px;
+            color: red;
+            margin-top: 20px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Task 1: Enter Name -->
+    <div class="task" id="task1">
+        <h1>Task 1: What is your name?</h1>
+        <p>Enter your name to proceed to the next task.</p>
+        <div class="input-section">
+            <input type="text" id="nameInput" placeholder="Enter your name">
+            <button onclick="revealMessage()">Submit</button>
+        </div>
+        <p class="clue hidden" id="clue1"></p>
+    </div>
+
+    <!-- Task 2: Use Specs and Take a Photo -->
+    <div class="task hidden" id="task2">
+        <h1>Task 2: Use Your Specs</h1>
+        <p>Use your specs to look into the mirror and take a photo to confirm.</p>
+        <p>Send the photo to 6303077404 to proceed.</p>
+        <button onclick="startTimer()">Photo Sent</button>
+    </div>
+
+    <!-- Task 3: Why Do You Hate Me? -->
+    <div class="task hidden" id="task3">
+        <h1>Task 3: Why do you hate me?</h1>
+        <div class="dropdown-section">
+            <select id="reasonSelect" onchange="handleReasonChange()">
+                <option value="">Select a reason</option>
+                <option value="love">Because you love me</option>
+                <option value="dislike">Because I don't like you</option>
+            </select>
+        </div>
+        <p class="hidden" id="loveMessage">
+            <span class="love-symbol">❤️</span><br>
+            I love you, Jyothsna!
+            <br><br>
+            <a id="whatsappLinkLove" href="#" target="_blank">Please install WhatsApp</a>
+        </p>
+        <p class="hidden" id="dislikeMessage">
+            <span class="broken-heart">💔</span><br>
+            Please love me. I love you, Neku kadupu nenu matrame cheyyali.
+            <br><br>
+            <a id="whatsappLinkDislike" href="#" target="_blank">Please install WhatsApp</a>
+        </p>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div id="timer">10</div>
+    </div>
+
+    <script>
+        function revealMessage() {
+            var name = document.getElementById('nameInput').value.trim();
+            
+            if (name.toLowerCase() === "jyothsna") {
+                var clueElement = document.getElementById('clue1');
+                clueElement.textContent = `Hello, ${name}! Use your specs to look into the mirror for the next clue.`;
+                clueElement.classList.remove('hidden');
+                document.getElementById('task2').classList.remove('hidden');
+            } else {
+                alert("Peeyush doesn't have interest in akrama sambandam.");
+            }
+        }
+
+        function startTimer() {
+            document.getElementById('task2').classList.add('hidden');
+            document.getElementById('overlay').style.display = 'flex';
+            var count = 10;
+            var timerElement = document.getElementById('timer');
+            var timer = setInterval(function() {
+                count--;
+                timerElement.textContent = count;
+                if (count === 0) {
+                    clearInterval(timer);
+                    document.getElementById('overlay').style.display = 'none';
+                    revealNextTask();
+                }
+            }, 1000);
+        }
+
+        function revealNextTask() {
+            document.getElementById('task3').classList.remove('hidden');
+        }
+
+        function handleReasonChange() {
+            var reason = document.getElementById('reasonSelect').value;
+            var loveMessage = document.getElementById('loveMessage');
+            var dislikeMessage = document.getElementById('dislikeMessage');
+
+            var whatsappLinkLove = document.getElementById('whatsappLinkLove');
+            var whatsappLinkDislike = document.getElementById('whatsappLinkDislike');
+
+            if (reason === "love") {
+                // Show love message
+                loveMessage.classList.remove('hidden');
+                dislikeMessage.classList.add('hidden');
+                whatsappLinkLove.href = 'https://web.whatsapp.com/';
+                whatsappLinkLove.textContent = 'Open WhatsApp Web';
+                // Clear screen
+                document.body.style.backgroundColor = '#000000';
+                document.body.innerHTML = '';
+                var loveSymbol = document.createElement('span');
+                loveSymbol.classList.add('love-symbol');
+                loveSymbol.textContent = '❤️';
+                document.body.appendChild(loveSymbol);
+                var loveText = document.createElement('p');
+                loveText.textContent = 'I love you, Jyothsna!';
+                loveText.style.textAlign = 'center';
+                loveText.style.color = '#ffffff';
+                loveText.style.marginTop = '20px';
+                document.body.appendChild(loveText);
+            } else if (reason === "dislike") {
+                // Show dislike message
+                dislikeMessage.classList.remove('hidden');
+                loveMessage.classList.add('hidden');
+                whatsappLinkDislike.href = 'https://web.whatsapp.com/';
+                whatsappLinkDislike.textContent = 'Open WhatsApp Web';
+                // Clear screen
+                document.body.style.backgroundColor = '#000000';
+                document.body.innerHTML = '';
+                var brokenHeart = document.createElement('span');
+                brokenHeart.classList.add('broken-heart');
+                brokenHeart.textContent = '💔';
+                document.body.appendChild(brokenHeart);
+                var dislikeText = document.createElement('p');
+                dislikeText.textContent = 'Please love me. I love you, Neku kadupu nenu matrame cheyyali.';
+                dislikeText.style.textAlign = 'center';
+                dislikeText.style.color = '#ffffff';
+                dislikeText.style.marginTop = '20px';
+                document.body.appendChild(dislikeText);
+            } else {
+                // Hide messages if no reason selected
+                loveMessage.classList.add('hidden');
+                dislikeMessage.classList.add('hidden');
+                document.body.style.backgroundColor = '#fef6e4';
+            }
+        }
+    </script>
+</body>
+</html>
